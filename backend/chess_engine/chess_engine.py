@@ -28,3 +28,14 @@ def update_game(input_json):
 
     json_data = json.dumps(game_data)
     return json_data
+
+
+init_dict = {
+    "player1_id": "abc",
+    "player2_id": "abd",
+    "player1_champ": 0,
+    "player2_champ": 0,
+    "moves": ["a3bg", "g6h7"],
+    "board_id": 0,
+    "termination": "draw",
+}
