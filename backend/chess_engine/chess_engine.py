@@ -30,12 +30,25 @@ def update_game(input_json):
     return json_data
 
 
+incoming_json = {
+    "game_id": "abc",
+    "moves": ["a3b8"],
+    "next_to_move": 0
+}
+
+resp_json = {
+    "game_id": "abc",
+    "legal_moves": ["a3bg", "g6h7"],
+    "next_to_move": 1
+}
+
+## in the database
 init_dict = {
     "player1_id": "abc",
     "player2_id": "abd",
     "player1_champ": 0,
     "player2_champ": 0,
-    "moves": ["a3bg", "g6h7"],
+    "moves": ["a3bg", "g6h7", "a3b7"],
     "board_id": 0,
     "termination": "draw",
 }
