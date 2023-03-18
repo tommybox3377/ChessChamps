@@ -66,9 +66,10 @@ class ConnectionManager:
             # Change the color to the second player, send them the data, and empty queue
             resp_data["color"] = "black"
 
-            self.queue = None
-
-            await self.active_connection_dict[self.queue[0]].send_json(resp_data)
+            try:
+                await self.active_connection_dict[self.queue[0]].send_json(resp_data)
+            finally:
+                self.queue = None
 
     async def make_move(self, data):
         game_data = self.games[data["game_id"]]
