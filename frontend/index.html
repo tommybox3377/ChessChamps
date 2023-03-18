@@ -21,15 +21,18 @@
 
         <h2>Your ID: <span id="ws-id"></span></h2>
         <h2>Game ID: <span id="game-id">None</span></h2>
-        <button onmousedown="sendMessage(event)">Join Game!</button>
+        <h2>Champ ID: <span id="champ-id">0</span></h2>
+
+        <button onmousedown="join_game()">Join Game!</button>
+        <div class="col-11bcf">
+            <button id="Champ_1">Champ 1</button>
+            <button id="Champ_2">Champ 2</button>
+        </div>
 
 <section class="homepage-section-88e4a body-width-115f6">
 
 <div class="col-11bcf">
     <div id="board" style="width: 400px"></div>
-    <button id="Champ_1">Champ 1</button>
-    <button id="Champ_2">Champ 2</button>
-    <ul id='messages'>
 </div>
 </section>
 
@@ -49,13 +52,19 @@
         sparePieces: false,
         onDragStart: onDragStart,
         onDrop: onDrop,
-        onSnapEnd: onSnapEnd
     })
   function init () {
     prettyPrint()
 
-    $('#Champ_1').on('click', board.start)
-    $('#Champ_2').on('click', board.clear)
+    $('#Champ_1').on('click', function (){
+        champ_id = 1;
+        document.querySelector("#champ-id").textContent = champ_id;
+      })
+
+    $('#Champ_2').on('click', function (){
+        champ_id = 2;
+        document.querySelector("#champ-id").textContent = champ_id;
+      })
 
     // prevent "browser drag" of the black king
     $('.hero-inner-556fe img').on('mousedown', function (evt) { evt.preventDefault() })
@@ -70,46 +79,27 @@
 
     var client_id = Date.now().toString() + Math.floor((Math.random() * 1000000000000000)).toString()
     var champ_id = 0;
-    // var color = null;
-    var game_id = document.querySelector("#ws-id").textContent;
-
-    var game = "{\"legal_moves\": [\"f3g5\", \"f3e5\", \"f3h4\", \"f3d4\", \"f3g1\", \"g2h3\", \"g2f1\", \"h1g1\", \"h1f1\", \"e1f1\", \"b1c3\", \"b1a3\", \"e1g1\", \"g3g4\", \"h2h3\", \"e2e3\", \"d2d3\", \"c2c3\", \"b2b3\", \"a2a3\", \"h2h4\", \"e2e4\", \"d2d4\", \"c2c4\", \"b2b4\", \"a2a4\"], \"termination\": null, \"winner\": null, \"turn\": \"w\"}"
-    var color = ""
-    game = JSON.parse(game)
-    console.log(game)
 
     document.querySelector("#ws-id").textContent = client_id;
 
     var ws = new WebSocket(`ws://localhost:8000/ws/${client_id}`);
 
     ws.onmessage = function(event) {
-        var messages = document.getElementById('messages')
-        var message = document.createElement('li')
-        var content = document.createTextNode(event.data)
-        message.appendChild(content)
-        messages.appendChild(message)
-
         const data = JSON.parse(event.data);
         game_id = data.game_id
         if (data.color)
             {color = data.color}
-        // var color = (typeof color === 'undefined') ? data.color : color;
-        // console.log(data)
         game = data
-        // console.log(data.game_fen)
         document.querySelector("#game-id").textContent = game_id;
         board.position(data.game_fen)
         board.orientation(color)
 
     };
-    function sendMessage(move) {
-
+    function join_game() {
         const data = {
             client_id: client_id,
             champ_id: champ_id,
             timestamp: Date.now(),
-            game_id: game_id,
-            move: move
           };
 
         ws.send(JSON.stringify(data))
